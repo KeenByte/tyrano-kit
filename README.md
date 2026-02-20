@@ -68,12 +68,13 @@ Scans all `.ks` files in the scenario folder and creates `translations.xlsx` wit
 
 | Column | Content                                      |
 |--------|----------------------------------------------|
-| A      | File name                                     |
-| B      | Line number                                   |
-| C      | Type (text / name / choice / etc.)            |
-| D      | Tag (original TyranoScript tag, if any)        |
+| A      | ID (row number)                               |
+| B      | File path (relative to scenario folder)       |
+| C      | Line number                                   |
+| D      | Type (dialogue / character_name / button)     |
 | E      | **Original** — the source text                |
 | F      | **Translation** — fill this in (or let Step 2 do it) |
+| G      | Context                                       |
 
 You can edit `translations.xlsx` in Excel or LibreOffice before or after machine translation to fix errors manually.
 

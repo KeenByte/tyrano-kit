@@ -25,10 +25,10 @@ def is_tag_only(line):
     stripped = TAG_RE.sub('', line).strip()
     return len(stripped) == 0
 
-def extract_strings(ks_path):
+def extract_strings(ks_path, rel_path=None):
     """Extract translatable strings from a .ks file."""
     entries = []
-    filename = os.path.basename(ks_path)
+    filename = rel_path.replace('\\', '/') if rel_path else os.path.basename(ks_path)
 
     with open(ks_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -37,7 +37,7 @@ def extract_strings(ks_path):
     text_block_start = None
 
     for i, raw_line in enumerate(lines, 1):
-        line = raw_line.rstrip('\n').rstrip('\r')
+        line = raw_line.rstrip('\r\n')
 
         # Detect text block boundaries
         if '[tb_start_text' in line:
@@ -111,7 +111,8 @@ def extract_to_xlsx(input_dir, output_xlsx):
 
     all_entries = []
     for ks in ks_files:
-        entries = extract_strings(ks)
+        rel_path = os.path.relpath(ks, input_dir)
+        entries = extract_strings(ks, rel_path)
         all_entries.extend(entries)
 
     print(f"Found {len(all_entries)} translatable strings in {len(ks_files)} files")
@@ -208,11 +209,11 @@ def apply_translations(input_dir, xlsx_path, output_dir):
         if not translation or not str(translation).strip():
             continue
 
-        key = (str(filename), int(line_num), str(str_type))
+        key = (str(filename).replace('\\', '/'), int(line_num), str(str_type))
         translations[key] = str(translation).strip()
 
         if str_type == 'button':
-            btn_key = (str(filename), str(original).strip())
+            btn_key = (str(filename).replace('\\', '/'), str(original).strip())
             button_map[btn_key] = str(translation).strip()
 
     print(f"Loaded {len(translations)} translations")
@@ -222,8 +223,8 @@ def apply_translations(input_dir, xlsx_path, output_dir):
     ks_files = sorted(glob.glob(os.path.join(input_dir, '**', '*.ks'), recursive=True))
 
     for ks_path in ks_files:
-        filename = os.path.basename(ks_path)
         rel_path = os.path.relpath(ks_path, input_dir)
+        filename = rel_path.replace('\\', '/')
 
         with open(ks_path, 'r', encoding='utf-8') as f:
             lines = f.readlines()
@@ -245,7 +246,7 @@ def apply_translations(input_dir, xlsx_path, output_dir):
                 continue
 
             if in_text_block:
-                stripped = line.rstrip('\n').rstrip('\r').strip()
+                stripped = line.rstrip('\r\n').strip()
 
                 # Character name
                 m_char = CHAR_NAME_RE.match(stripped)

@@ -93,6 +93,7 @@ def save_settings(settings):
         f'set "OUT_DIR={settings["out_dir"]}"\r\n'
     )
     with open(bat_path, "wb") as f:
+        f.write(b'\xef\xbb\xbf')  # UTF-8 BOM
         f.write(bat_content.encode("utf-8"))
 
 
