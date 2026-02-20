@@ -132,7 +132,7 @@ def extract_to_xlsx(input_dir, output_xlsx):
         bottom=Side(style='thin'),
     )
 
-    headers = ["ID", "File", "Line", "Type", "Original (EN)", "Translation (RU)", "Context"]
+    headers = ["ID", "File", "Line", "Type", "Original", "Translation", "Context"]
     for col, h in enumerate(headers, 1):
         cell = ws.cell(row=1, column=col, value=h)
         cell.font = header_font

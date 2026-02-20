@@ -6,13 +6,13 @@ echo === Machine translation ===
 echo.
 echo File: %XLSX%
 echo.
-echo Engines: yandex, google
+echo Engines: google, deepl, libre, mymemory
 echo Language codes: en, ru, de, fr, ja, ko, zh, es, it, pt ...
 echo Full list: python translate_xlsx.py --list
 echo.
 
-set /p ENGINE="Engine [yandex]: "
-if "%ENGINE%"=="" set "ENGINE=yandex"
+set /p ENGINE="Engine [google]: "
+if "%ENGINE%"=="" set "ENGINE=google"
 
 set /p FROM_LANG="Source language [en]: "
 if "%FROM_LANG%"=="" set "FROM_LANG=en"

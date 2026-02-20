@@ -12,5 +12,5 @@ where py >nul 2>&1 && (
     start "" py "%~dp0launcher.pyw"
     exit /b
 )
-echo Python ne najden! Ustanovi Python i dobav v PATH.
+echo Python not found! Install Python and add to PATH.
 pause
