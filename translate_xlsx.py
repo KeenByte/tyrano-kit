@@ -188,7 +188,7 @@ def translate_one(engine, text):
         return tr if tr else text
     except Exception as e:
         print(f"  [!] Error: '{text[:40]}...': {e}")
-        return ""
+        return None
 
 
 def main():
@@ -320,8 +320,9 @@ Examples:
             for row_idx in batch_rows:
                 text = str(ws.cell(row=row_idx, column=SOURCE_COL).value).strip()
                 tr_text = translate_one(engine, text)
-                ws.cell(row=row_idx, column=TARGET_COL, value=tr_text)
-                translated_count += 1
+                if tr_text is not None:
+                    ws.cell(row=row_idx, column=TARGET_COL, value=tr_text)
+                    translated_count += 1
 
             done = skipped + translated_count
             pct = done / total_rows * 100

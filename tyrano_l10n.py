@@ -30,7 +30,7 @@ def extract_strings(ks_path, rel_path=None):
     entries = []
     filename = rel_path.replace('\\', '/') if rel_path else os.path.basename(ks_path)
 
-    with open(ks_path, 'r', encoding='utf-8') as f:
+    with open(ks_path, 'r', encoding='utf-8-sig') as f:
         lines = f.readlines()
 
     in_text_block = False
@@ -84,6 +84,7 @@ def extract_strings(ks_path, rel_path=None):
                     'context': f'Text block starting line {text_block_start}',
                     'raw_line': text,
                 })
+            continue
 
         # Outside text blocks: extract glink button text
         glink_matches = GLINK_TEXT_RE.findall(line)
@@ -226,7 +227,11 @@ def apply_translations(input_dir, xlsx_path, output_dir):
         rel_path = os.path.relpath(ks_path, input_dir)
         filename = rel_path.replace('\\', '/')
 
-        with open(ks_path, 'r', encoding='utf-8') as f:
+        # Detect BOM
+        with open(ks_path, 'rb') as fb:
+            has_bom = fb.read(3) == b'\xef\xbb\xbf'
+
+        with open(ks_path, 'r', encoding='utf-8-sig') as f:
             lines = f.readlines()
 
         new_lines = []
@@ -294,9 +299,11 @@ def apply_translations(input_dir, xlsx_path, output_dir):
             new_lines.append(line)
 
         out_path = os.path.join(output_dir, rel_path)
-        os.makedirs(os.path.dirname(out_path), exist_ok=True)
-        with open(out_path, 'w', encoding='utf-8') as f:
-            f.writelines(new_lines)
+        os.makedirs(os.path.dirname(out_path) or '.', exist_ok=True)
+        with open(out_path, 'wb') as f:
+            if has_bom:
+                f.write(b'\xef\xbb\xbf')
+            f.write(''.join(new_lines).encode('utf-8'))
 
     print(f"Translated files saved to: {output_dir}")
 
