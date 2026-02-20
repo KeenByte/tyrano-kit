@@ -1,0 +1,7 @@
+config.json
+translations.xlsx
+translations_translated.xlsx
+translated/
+__pycache__/
+*.pyc
+.pause_signal
