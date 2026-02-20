@@ -1,4 +1,4 @@
-# TyranoScript Localization Kit
+# TyranoScript/TyranoBuilder Localization Kit
 
 A toolkit for translating TyranoScript visual novel games.  
 Extracts text from `.ks` files into an Excel spreadsheet, translates it via machine translation, and writes the translated text back into new `.ks` files.
